@@ -75,10 +75,6 @@ cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
 	#quantify reads for cpmt
 	echo 'READS MAPPED TO CPMT'
 	grep -f scafCPMT.lst scafreads.lst | awk '{s+=$3}END{print s}'
-	
-	#list nuclear scafs
-	diff scaf.lst scafCPMT.lst | awk '$2 ~ /scf/ {print $2}' > scafNuc.lst
-	wc -l scafNuc.lst
 
 #RUN REPEATMASKER ON ALL SCAFFOLDS (start in taxon folder)
 	echo 'REPEATMASKER' 
