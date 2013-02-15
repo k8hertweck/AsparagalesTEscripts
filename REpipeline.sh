@@ -1,9 +1,9 @@
 #!/bin/bash
 #$ -S /bin/bash -cwd
-#$ -o DM01TE.out -j y
+#$ -o EL01TE.out -j y
 #$ -M k8hertweck@gmail.com -m e
 #$ -l highprio
-#$ -N DM01TE
+#$ -N EL01TE
 
 ##REPLACE TAXON WITH NAME
 ##TAXON FOLDER IN /home/nescent/kh200/repeats
@@ -13,8 +13,9 @@
 ##sr_config.txt: READ FILE, PATH, SET READ PARAMETERS
 ##THINGS TO CHANGE IN THIS FILE?
 ##MUST HAVE PROGRAMS INSTALLED: MSR, repeatmasker, smalt, samtools, seqtk, cdbyank
+#need to add: sending echoed output to file
 
-cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
+cd /Users/kate/Desktop/REdata/Poaceae/EL01/pipeline
 
 ##MSR ON ALL RAW READS (sr_config.txt is in taxon folder)
 	#echo 'MSR' 
@@ -42,7 +43,7 @@ cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
 	
 	#MAP READS TO SCAFFOLDS
 	smalt index scaf scaf.fas 
-	smalt map -f sam -o scaf.sam scaf ~/data/DM01TRIM.fastq 
+	smalt map -f sam -o scaf.sam scaf ~/data/EL01TRIM.fastq 
 	
 	##convert from SAM to BAM
 	samtools view -bS -o scaf.bam scaf.sam 
@@ -93,8 +94,10 @@ cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
 #UNKNOWN SCAFFOLDS
 	#LIST UNKNOWN SCAFFOLDS
 	echo 'UNKNOWN SCAFFOLDS'
-	diff scaf.lst scafCPMT.lst | diff scafRE.lst | awk '$2 ~ /scf/ {print $2}' > scafUnknown.lst
+	diff scaf.lst scafCPMT.lst > nuc.temp 
+	diff nuc.temp scafRE.lst | awk '$2 ~ /scf/ {print $2}' > scafUnknown.lst
 	wc -l scafUnknown.lst
+	rm nuc.temp
 	
 	#fasta unknown scafs to BLAST later
 	cat scafUnknown.lst | cdbyank scaf.fas.cidx -o scafUnknown.fas
