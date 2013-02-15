@@ -15,8 +15,6 @@
 ##MUST HAVE PROGRAMS INSTALLED: MSR, repeatmasker, smalt, samtools, seqtk, cdbyank
 #need to add: sending echoed output to file
 
-cd /Users/kate/Desktop/REdata/Poaceae/TAXON/pipeline
-
 ##MSR ON ALL RAW READS (sr_config.txt is in taxon folder)
 	#echo 'MSR' 
 	#mkdir temp MSR 
