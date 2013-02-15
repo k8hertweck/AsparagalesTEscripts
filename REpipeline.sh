@@ -94,7 +94,7 @@ cd /Users/kate/Desktop/REdata/Poaceae/TAXON/pipeline
 #UNKNOWN SCAFFOLDS
 	#LIST UNKNOWN SCAFFOLDS
 	echo 'UNKNOWN SCAFFOLDS'
-	diff scaf.lst scafCPMT.lst > nuc.temp 
+	diff scaf.lst scafCPMT.lst | awk '$2 ~ /scf/ {print $2}' > nuc.temp 
 	diff nuc.temp scafRE.lst | awk '$2 ~ /scf/ {print $2}' > scafUnknown.lst
 	wc -l scafUnknown.lst
 	rm nuc.temp
