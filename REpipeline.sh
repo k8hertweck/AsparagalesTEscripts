@@ -103,7 +103,7 @@ cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
 
 #PARSING INTO REPEAT CLASSES (start in taxon folder)
 echo 'PARSING REPEATS' 
-mkdir retroelements DNA retroelements/LINE retroelements/SINE retroelements/LTRs
+mkdir retroelements DNA retroelements/LINE retroelements/SINE retroelements/LTRs other
 	
 	#RETROELEMENTS
 	echo 'RETROELEMENTS' 
@@ -167,3 +167,33 @@ mkdir retroelements DNA retroelements/LINE retroelements/SINE retroelements/LTRs
 		#count reads mapping to category scaffolds (from original smalt)
 		echo 'TOTAL READS MAPPED'
 		grep -f DNA/DNAscafs.lst scaf/scafreads.lst| awk '{s+=$3}END{print s}'
+	echo 'RC'
+		#find and count scaffolds annotated as category
+		awk '$11 ~ /RC/ {print $0}' scaf/scaf.fas.out > other/RC.out
+		awk '{print $5}' other/RC.out | sort | uniq > other/RCscafs.lst
+		wc -l other/RCscafs.lst 
+		#pull out scaffolds annotated as category
+		cat other/RCscafs.lst | cdbyank scaf/scaf.fas.cidx -o other/RCscafs.fas 
+		#count reads mapping to category scaffolds (from original smalt)
+		echo 'TOTAL READS MAPPED'
+		grep -f other/RCscafs.lst scaf/scafreads.lst| awk '{s+=$3}END{print s}'
+	echo 'Satellite'
+		#find and count scaffolds annotated as category
+		awk '$11 ~ /Satellite/ {print $0}' scaf/scaf.fas.out > other/Satellite.out
+		awk '{print $5}' other/Satellite.out | sort | uniq > other/Satellitescafs.lst
+		wc -l other/Satellitescafs.lst 
+		#pull out scaffolds annotated as category
+		cat other/Satellitescafs.lst | cdbyank scaf/scaf.fas.cidx -o other/Satellitescafs.fas 
+		#count reads mapping to category scaffolds (from original smalt)
+		echo 'TOTAL READS MAPPED'
+		grep -f other/Satellitescafs.lst scaf/scafreads.lst| awk '{s+=$3}END{print s}'	
+	echo 'rRNA'
+		#find and count scaffolds annotated as category
+		awk '$11 ~ /rRNA/ {print $0}' scaf/scaf.fas.out > other/rRNA.out
+		awk '{print $5}' other/rRNA.out | sort | uniq > other/rRNAscafs.lst
+		wc -l other/rRNAscafs.lst 
+		#pull out scaffolds annotated as category
+		cat other/rRNAscafs.lst | cdbyank scaf/scaf.fas.cidx -o other/rRNAscafs.fas 
+		#count reads mapping to category scaffolds (from original smalt)
+		echo 'TOTAL READS MAPPED'
+		grep -f other/rRNAscafs.lst scaf/scafreads.lst| awk '{s+=$3}END{print s}'	
