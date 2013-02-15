@@ -1,9 +1,9 @@
 #!/bin/bash
 #$ -S /bin/bash -cwd
-#$ -o DM01TE.out -j y
+#$ -o EL01TE.out -j y
 #$ -M k8hertweck@gmail.com -m e
 #$ -l highprio
-#$ -N DM01TE
+#$ -N EL01TE
 
 ##REPLACE TAXON WITH NAME
 ##TAXON FOLDER IN /home/nescent/kh200/repeats
@@ -14,7 +14,7 @@
 ##THINGS TO CHANGE IN THIS FILE?
 ##MUST HAVE PROGRAMS INSTALLED: MSR, repeatmasker, smalt, samtools, seqtk, cdbyank
 
-cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
+cd /Users/kate/Desktop/REdata/Poaceae/EL01/pipeline
 
 ##MSR ON ALL RAW READS (sr_config.txt is in taxon folder)
 	#echo 'MSR' 
@@ -42,7 +42,7 @@ cd /Users/kate/Desktop/REdata/Poaceae/DM01/pipeline
 	
 	#MAP READS TO SCAFFOLDS
 	smalt index scaf scaf.fas 
-	smalt map -f sam -o scaf.sam scaf ~/data/DM01TRIM.fastq 
+	smalt map -f sam -o scaf.sam scaf ~/data/EL01TRIM.fastq 
 	
 	##convert from SAM to BAM
 	samtools view -bS -o scaf.bam scaf.sam 
@@ -161,7 +161,6 @@ mkdir retroelements DNA retroelements/LINE retroelements/SINE retroelements/LTRs
 		#count reads mapping to category scaffolds (from original smalt)
 		echo 'TOTAL READS MAPPED'
 		grep -f retroelements/LINEscafs.lst scaf/scafreads.lst| awk '{s+=$3}END{print s}'
-		
 	echo 'DNA'
 		#find and count scaffolds annotated as category
 		awk '$11 ~ /DNA/ {print $0}' scaf/scaf.fas.out > DNA/DNA.out
@@ -172,4 +171,3 @@ mkdir retroelements DNA retroelements/LINE retroelements/SINE retroelements/LTRs
 		#count reads mapping to category scaffolds (from original smalt)
 		echo 'TOTAL READS MAPPED'
 		grep -f DNA/DNAscafs.lst scaf/scafreads.lst| awk '{s+=$3}END{print s}'
-
