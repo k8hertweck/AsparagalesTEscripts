@@ -1,9 +1,9 @@
 #!/bin/bash
 #$ -S /bin/bash -cwd
-#$ -o EL01TE.out -j y
+#$ -o TAXONTE.out -j y
 #$ -M k8hertweck@gmail.com -m e
 #$ -l highprio
-#$ -N EL01TE
+#$ -N TAXONTE
 
 ##REPLACE TAXON WITH NAME
 ##TAXON FOLDER IN /home/nescent/kh200/repeats
@@ -15,7 +15,7 @@
 ##MUST HAVE PROGRAMS INSTALLED: MSR, repeatmasker, smalt, samtools, seqtk, cdbyank
 #need to add: sending echoed output to file
 
-cd /Users/kate/Desktop/REdata/Poaceae/EL01/pipeline
+cd /Users/kate/Desktop/REdata/Poaceae/TAXON/pipeline
 
 ##MSR ON ALL RAW READS (sr_config.txt is in taxon folder)
 	#echo 'MSR' 
@@ -43,7 +43,7 @@ cd /Users/kate/Desktop/REdata/Poaceae/EL01/pipeline
 	
 	#MAP READS TO SCAFFOLDS
 	smalt index scaf scaf.fas 
-	smalt map -f sam -o scaf.sam scaf ~/data/EL01TRIM.fastq 
+	smalt map -f sam -o scaf.sam scaf ~/data/TAXONTRIM.fastq 
 	
 	##convert from SAM to BAM
 	samtools view -bS -o scaf.bam scaf.sam 
