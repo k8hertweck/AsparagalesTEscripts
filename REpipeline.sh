@@ -1,9 +1,9 @@
 #!/bin/bash
 #$ -S /bin/bash -cwd
-#$ -o TAXONTE.out -j y
+#$ -o EL01TE.out -j y
 #$ -M k8hertweck@gmail.com -m e
 #$ -l highprio
-#$ -N TAXONTE
+#$ -N EL01TE
 
 ##REPLACE TAXON WITH NAME
 ##TAXON FOLDER IN /home/nescent/kh200/repeats
@@ -14,6 +14,8 @@
 ##THINGS TO CHANGE IN THIS FILE?
 ##MUST HAVE PROGRAMS INSTALLED: MSR, repeatmasker, smalt, samtools, seqtk, cdbyank
 #need to add: sending echoed output to file
+
+cd /Users/kate/Desktop/REdata/Poaceae/EL01/pipeline
 
 ##MSR ON ALL RAW READS (sr_config.txt is in taxon folder)
 	#echo 'MSR' 
@@ -30,18 +32,18 @@
 	
 #QUANTIFICATION
 	
-	echo 'QUANTIFICATION AND PREP'
+	#echo 'QUANTIFICATION AND PREP'
 	
 	#list scaf.fas names
-	cd scaf
-	grep ">" scaf.fas | sed 's/>//' > scaf.lst
-	wc -l scaf.lst
+	#cd scaf
+	#grep ">" scaf.fas | sed 's/>//' > scaf.lst
+	#wc -l scaf.lst
 	#make index
-	cdbfasta scaf.fas
+	#cdbfasta scaf.fas
 	
 	#MAP READS TO SCAFFOLDS
 	smalt index scaf scaf.fas 
-	smalt map -f sam -o scaf.sam scaf ~/data/TAXONTRIM.fastq 
+	smalt map -f sam -o scaf.sam scaf ~/data/EL01TRIM.fastq 
 	
 	##convert from SAM to BAM
 	samtools view -bS -o scaf.bam scaf.sam 
@@ -80,10 +82,15 @@
 	repeatmasker -gff -species liliopsida scaf.fas 
 
 #UNIQUE REPEAT SCAFFOLDS
+	#REMOVE CPMT SCAFFOLDS
+	diff scaf.lst scafCPMT.lst | awk '$2 ~ /scf/ {print $2}' > nuc.lst 
+	
 	#FIND UNIQUE REPEAT SCAFFOLDS
 	echo 'UNIQUE REPEAT SCAFFOLDS'
-	tail -n+4  scaf.fas.out | awk '{print $5}' | sort | uniq > scafRE.lst
+	tail -n+4  scaf.fas.out | awk '{print $5}' | sort | uniq > RE.temp
+	diff nuc.lst RE.temp | awk '$2 ~ /scf/ {print $2}' > scafRE.lst
 	wc -l scafRE.lst 
+	rm RE.temp
 	
 	#TOTAL REPEAT READS MAPPED
 	echo 'TOTAL REPEAT READS MAPPED'
@@ -92,10 +99,8 @@
 #UNKNOWN SCAFFOLDS
 	#LIST UNKNOWN SCAFFOLDS
 	echo 'UNKNOWN SCAFFOLDS'
-	diff scaf.lst scafCPMT.lst | awk '$2 ~ /scf/ {print $2}' > nuc.temp 
-	diff nuc.temp scafRE.lst | awk '$2 ~ /scf/ {print $2}' > scafUnknown.lst
+	diff nuc.lst scafRE.lst | awk '$2 ~ /scf/ {print $2}' > scafUnknown.lst
 	wc -l scafUnknown.lst
-	rm nuc.temp
 	
 	#fasta unknown scafs to BLAST later
 	cat scafUnknown.lst | cdbyank scaf.fas.cidx -o scafUnknown.fas
