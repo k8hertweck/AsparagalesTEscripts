@@ -88,8 +88,8 @@ cd /Users/kate/Desktop/REdata/Poaceae/TAXON/pipeline
 	#FIND UNIQUE REPEAT SCAFFOLDS
 	echo 'UNIQUE REPEAT SCAFFOLDS'
 	tail -n+4  scaf.fas.out | awk '{print $5}' | sort | uniq > RE.temp
-	diff nuc.lst RE.temp | awk '$2 ~ /scf/ {print $2}' > scafRE.lst
-	wc -l scafRE.lst 
+	grep -v -f scafCPMT.lst RE.temp > scafRE.lst
+	wc -l scafRE.lst
 	rm RE.temp
 	
 	#TOTAL REPEAT READS MAPPED
@@ -99,7 +99,7 @@ cd /Users/kate/Desktop/REdata/Poaceae/TAXON/pipeline
 #UNKNOWN SCAFFOLDS
 	#LIST UNKNOWN SCAFFOLDS
 	echo 'UNKNOWN SCAFFOLDS'
-	diff nuc.lst scafRE.lst | awk '$2 ~ /scf/ {print $2}' > scafUnknown.lst
+	grep -v -f scafRE.lst nuc.lst > scafUnknown.lst
 	wc -l scafUnknown.lst
 	
 	#fasta unknown scafs to BLAST later
